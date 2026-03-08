@@ -3,10 +3,10 @@
 > An agentic LLM pipeline that reasons about candidate–job fit the way a senior recruiter thinks — not keyword matching, but semantic role alignment, transferable skill inference, and evidence-backed hiring recommendations.
 
 <!-- Badges — update as project progresses -->
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph-orange)
-![LLM](https://img.shields.io/badge/LLM-Llama%203.3%2070B%20%7C%20GPT--4o--mini-green)
-![License](https://img.shields.io/badge/License-MIT-lightgrey)
+![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge)
+![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph-orange?style=for-the-badge)
+![LLM](https://img.shields.io/badge/LLM-Llama%203.3%2070B%20%7C%20GPT--4o--mini-green?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)
 
 ---
 
