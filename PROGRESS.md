@@ -9,10 +9,10 @@
 - [x] MVP scope confirmed and stretch goals separated
 
 ## Phase 2 — Research & Feasibility
-- [ ] Related projects and papers reviewed
-- [ ] Data/knowledge source confirmed (JD as PDF/TXT, Resume as PDF/DOCX/TXT — no external KB needed)
-- [ ] LLM and embedding model chosen with justification
-- [ ] Key risks documented (hallucination, cost, latency, data quality)
+- [x] Related projects and papers reviewed
+- [x] Data/knowledge source confirmed (JD as PDF/TXT, Resume as PDF/DOCX/TXT — no external KB needed)
+- [x] LLM and embedding model chosen with justification
+- [x] Key risks documented (hallucination, cost, latency, data quality)
 
 ## Phase 3 — System Design & Architecture
 - [ ] Architecture diagram created (Mermaid in docs/)
