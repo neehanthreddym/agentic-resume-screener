@@ -16,7 +16,7 @@ Recruiters spend an average of 6–7 seconds on a resume. ATS systems miss stron
 
 ## What This Does
 
-Upload a **job description** (PDF or text) and a **resume** (PDF, DOCX, or text). Get back:
+Upload a **job description** (PDF or text) and a **resume** (PDF or DOCX). Get back:
 
 | Output | Description |
 |--------|-------------|
@@ -31,15 +31,15 @@ Upload a **job description** (PDF or text) and a **resume** (PDF, DOCX, or text)
 > Architecture diagram will be added in Phase 3.
 
 ```
-Resume (PDF / DOCX / TXT) + JD (PDF / TXT)
+Resume (PDF / DOCX) + JD (PDF / TXT)
        ↓
-  [Parse & Clean]         — pdfplumber (PDF) | python-docx (DOCX) | open() (TXT)
+  [Parser Node]           — LangGraph Node 1: pdfplumber (PDF) | python-docx (DOCX)
        ↓
-  [Extraction Agent]      — LLM #1: structured skill/requirement extraction
+  [Extraction Agent]      — LangGraph Node 2 (LLM): structured skill/requirement extraction
        ↓
-  [Gap Analysis Agent]    — LLM #2: semantic comparison + scoring
+  [Gap Analysis Agent]    — LangGraph Node 3 (LLM): semantic comparison + scoring
        ↓
-  [Recommendation Agent]  — LLM #3: hiring recommendation + interview questions
+  [Recommendation Agent]  — LangGraph Node 4 (LLM): hiring recommendation + interview questions
        ↓
   Pydantic Output → FastAPI → Streamlit UI
 ```

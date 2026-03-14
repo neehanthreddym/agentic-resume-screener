@@ -10,15 +10,14 @@
 
 ## Phase 2 — Research & Feasibility
 - [x] Related projects and papers reviewed
-- [x] Data/knowledge source confirmed (JD as PDF/TXT, Resume as PDF/DOCX/TXT — no external KB needed)
+- [x] Data/knowledge source confirmed (JD as PDF/TXT, Resume as PDF/DOCX — no external KB needed)
 - [x] LLM and embedding model chosen with justification
 - [x] Key risks documented (hallucination, cost, latency, data quality)
 
 ## Phase 3 — System Design & Architecture
-- [ ] Architecture diagram created (Mermaid in docs/)
-- [ ] Folder structure initialized and pushed to GitHub
-- [ ] Tool stack finalized with written justifications
-- [ ] GitHub Project board set up with all phase tasks
+- [x] Architecture diagram created (assets/architecture)
+- [x] Folder structure initialized and pushed to GitHub
+- [x] Tool stack finalized with written justifications
 
 ## Phase 4 — Data & Knowledge Base Preparation
 - [ ] Sample JD + resume pairs collected (20–30 pairs for eval)
@@ -27,7 +26,7 @@
 - [ ] Structured extraction tested on sample inputs
 
 ## Phase 5 — Prompt Engineering & Chain Design
-- [ ] System prompts v1 written for all three agents (extract, analyze, recommend)
+- [ ] System prompts v1 written for all three LLM agents (extract, analyze, recommend)
 - [ ] Prompt versions tracked (Google Sheets or LangSmith)
 - [ ] LangGraph pipeline built end-to-end
 - [ ] Structured Pydantic output schema defined and validated

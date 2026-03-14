@@ -6,7 +6,7 @@ Recruiters spend an average of 6–7 seconds reviewing a resume, and most ATS sy
 
 ## One-Paragraph Brief
 
-This project is an **agentic LLM pipeline** that reasons about candidate–job fit the way a senior recruiter actually thinks. Given a job description and a resume (PDF, DOCX, or plain text), the system extracts structured skills and requirements from each document, performs a semantic gap analysis that accounts for transferable skills, and produces a calibrated, evidence-backed hiring recommendation in plain English. The output includes a match score (0–100), a skill gap table distinguishing present vs. missing vs. inferred-transferable skills, a top-3 list of interview focus areas, and a flags section for vague or contradictory claims. The system is built as a three-agent LangGraph pipeline with Pydantic-enforced structured output served over FastAPI, with a Streamlit UI for interactive demos. The target users are HR teams and hiring managers at SMBs who lack enterprise ATS tooling.
+This project is an **agentic LLM pipeline** that reasons about candidate–job fit the way a senior recruiter actually thinks. Given a job description (PDF or plain text) and a resume (PDF or DOCX), the system extracts structured skills and requirements from each document, performs a semantic gap analysis that accounts for transferable skills, and produces a calibrated, evidence-backed hiring recommendation in plain English. The output includes a match score (0–100), a skill gap table distinguishing present vs. missing vs. inferred-transferable skills, a top-3 list of interview focus areas, and a flags section for vague or contradictory claims. The system is built as a four-node LangGraph pipeline with Pydantic-enforced structured output served over FastAPI, with a Streamlit UI for interactive demos. The target users are HR teams and hiring managers at SMBs who lack enterprise ATS tooling.
 
 ## Target Users
 
@@ -30,15 +30,15 @@ Pure NLP/ML (TF-IDF cosine similarity, classification models) cannot do this rel
 **Structured Agentic Pipeline** using LangGraph (not RAG — no external knowledge base needed for single-document analysis).
 
 ```
-Resume (PDF / DOCX / TXT) + JD (PDF / TXT)
+Resume (PDF / DOCX) + JD (PDF / TXT)
        ↓
-  [Parse & Clean]         — pdfplumber (PDF) | python-docx (DOCX) | open() (TXT)
+  [Parser Node]           — LangGraph Node 1: pdfplumber (PDF) | python-docx (DOCX)
        ↓
-  [Extraction Agent]      — LLM Call #1: extract structured skills/requirements from each doc
+  [Extraction Agent]      — LangGraph Node 2 (LLM): extract structured skills/requirements from each doc
        ↓
-  [Gap Analysis Agent]    — LLM Call #2: compare, score, identify gaps & transferable skills
+  [Gap Analysis Agent]    — LangGraph Node 3 (LLM): compare, score, identify gaps & transferable skills
        ↓
-  [Recommendation Agent]  — LLM Call #3: generate hiring recommendation + interview questions
+  [Recommendation Agent]  — LangGraph Node 4 (LLM): generate hiring recommendation + interview questions
        ↓
   Pydantic Structured Output → FastAPI → Streamlit UI
 ```
@@ -69,9 +69,9 @@ Resume (PDF / DOCX / TXT) + JD (PDF / TXT)
 
 ## MVP Scope
 
-- Resume upload: PDF, DOCX, and plain text supported
+- Resume upload: PDF and DOCX supported
 - JD upload: PDF and plain text supported
-- Three-agent LangGraph pipeline with Pydantic output
+- LangGraph pipeline with Pydantic output
 - Match score + skill gap table + hiring recommendation + interview focus areas + red flags
 - FastAPI `/analyze` and `/health` endpoints
 - Streamlit UI with upload + formatted results
