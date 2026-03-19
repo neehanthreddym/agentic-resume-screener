@@ -20,7 +20,7 @@
 - [x] Tool stack finalized with written justifications
 
 ## Phase 4 — Data & Knowledge Base Preparation
-- [ ] Sample JD + resume pairs collected (20–30 pairs for eval)
+- [x] Sample JD + resume pairs collected (15 pairs for MVP eval)
 - [ ] Document parsing tested — pdfplumber (PDF), python-docx (DOCX), open() (TXT)
 - [ ] Evaluation dataset created (20 JD/resume pairs with human-labeled verdicts)
 - [ ] Structured extraction tested on sample inputs
