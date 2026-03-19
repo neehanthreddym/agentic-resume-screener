@@ -21,9 +21,9 @@
 
 ## Phase 4 — Data & Knowledge Base Preparation
 - [x] Sample JD + resume pairs collected (15 pairs for MVP eval)
-- [ ] Document parsing tested — pdfplumber (PDF), python-docx (DOCX), open() (TXT)
-- [ ] Evaluation dataset created (20 JD/resume pairs with human-labeled verdicts)
+- [x] Document parsing tested — PyMuPDF (PDF blocks), python-docx (DOCX tables/hierarchy), open() (TXT)
 - [ ] Structured extraction tested on sample inputs
+- [ ] Evaluation dataset created (20 JD/resume pairs with human-labeled verdicts)
 
 ## Phase 5 — Prompt Engineering & Chain Design
 - [ ] System prompts v1 written for all three LLM agents (extract, analyze, recommend)

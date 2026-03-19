@@ -33,7 +33,7 @@ Upload a **job description** (PDF or text) and a **resume** (PDF or DOCX). Get b
 ```
 Resume (PDF / DOCX) + JD (PDF / TXT)
        ↓
-  [Parser Node]           — LangGraph Node 1: pdfplumber (PDF) | python-docx (DOCX)
+  [Parser Node]           — LangGraph Node 1: PyMuPDF (PDF blocks) | python-docx (DOCX tables/hierarchy)
        ↓
   [Extraction Agent]      — LangGraph Node 2 (LLM): structured skill/requirement extraction
        ↓
@@ -52,8 +52,8 @@ Resume (PDF / DOCX) + JD (PDF / TXT)
 | LLM (Primary) | `llama-3.3-70b-versatile` via Groq |
 | LLM (Fallback) | `gpt-4o-mini` via OpenAI |
 | Structured Output | `instructor` + Pydantic |
-| PDF Parsing | `pdfplumber` |
-| DOCX Parsing | `python-docx` |
+| PDF Parsing | `PyMuPDF` (`fitz`) |
+| DOCX Parsing | `python-docx` (XML crawl) |
 | API | FastAPI |
 | UI | Streamlit |
 | Deployment | Hugging Face Spaces |

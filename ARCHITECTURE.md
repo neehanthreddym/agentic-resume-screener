@@ -49,6 +49,10 @@ For the initial MVP, the LangGraph nodes act as deterministic **LLM Nodes** rath
 - **FastAPI:** Chosen for its native asynchronous capabilities, automatic Swagger documentation, and seamless integration with Pydantic for input validation.
 - **Streamlit:** Chosen for rapid minimum viable product (MVP) UI creation, allowing me to build a functional frontend that handles file uploads purely in Python without writing React/HTML.
 
+### 3.5 Data Ingestion & Parsing Strategy
+- **PDF Extraction (PyMuPDF):** Standard parsers (like `pdfplumber`) extract text strictly by Y-coordinates, which destroys the semantic flow of two-column resumes (merging unrelated columns line-by-line). I chose `PyMuPDF` (`fitz`) for its ability to extract text as logical blocks (`page.get_text("blocks")`), preserving the true reading order and column structures necessary for structured LLM comprehension.
+- **DOCX Extraction (python-docx):** I discovered that standard paragraph iteration blind-spots hidden Word tables, which are commonly used for formatting "Skills" sections. Furthermore, extracting tables sequentially *after* paragraphs tacks them onto the bottom of the text, destroying the document's logical hierarchy. The ingestion pipeline is designed to explicitly crawl the underlying document elements to extract paragraphs and tables in their exact visual sequential order.
+
 ---
 
 ## 4. Key Risks and Mitigations Overview
