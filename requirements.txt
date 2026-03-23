@@ -1,3 +1,7 @@
 # pdfplumber
 pymupdf
 python-docx
+python-dotenv
+pydantic
+langchain-core
+langchain-groq
