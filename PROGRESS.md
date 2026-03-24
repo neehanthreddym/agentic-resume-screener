@@ -22,14 +22,14 @@
 ## Phase 4 — Data & Knowledge Base Preparation
 - [x] Sample JD + resume pairs collected (15 pairs for MVP eval)
 - [x] Document parsing tested — PyMuPDF (PDF blocks), python-docx (DOCX tables/hierarchy), open() (TXT)
-- [ ] Structured extraction tested on sample inputs
+- [x] Structured extraction tested on sample inputs
 - [ ] Evaluation dataset created (20 JD/resume pairs with human-labeled verdicts)
 
 ## Phase 5 — Prompt Engineering & Chain Design
 - [ ] System prompts v1 written for all three LLM agents (extract, analyze, recommend)
 - [ ] Prompt versions tracked (Google Sheets or LangSmith)
 - [ ] LangGraph pipeline built end-to-end
-- [ ] Structured Pydantic output schema defined and validated
+- [x] Structured Pydantic output schema defined and validated
 - [ ] Guardrails added (off-topic input rejection, parse failure fallback)
 
 ## Phase 6 — Evaluation & Quality Assurance
