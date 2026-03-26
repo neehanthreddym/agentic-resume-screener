@@ -23,17 +23,17 @@
 - [x] Sample JD + resume pairs collected (15 pairs for MVP eval)
 - [x] Document parsing tested — PyMuPDF (PDF blocks), python-docx (DOCX tables/hierarchy), open() (TXT)
 - [x] Structured extraction tested on sample inputs
-- [ ] Evaluation dataset created (20 JD/resume pairs with human-labeled verdicts)
+- [x] Evaluation dataset created (15 JD/resume pairs with human-labeled verdicts)
 
 ## Phase 5 — Prompt Engineering & Chain Design
-- [ ] System prompts v1 written for all three LLM agents (extract, analyze, recommend)
+- [x] System prompts v1 written for all three LLM agents (extract, analyze, recommend)
 - [ ] Prompt versions tracked (Google Sheets or LangSmith)
-- [ ] LangGraph pipeline built end-to-end
+- [x] LangGraph pipeline built end-to-end (smoke tested in 03_pipeline_testing.ipynb)
 - [x] Structured Pydantic output schema defined and validated
 - [ ] Guardrails added (off-topic input rejection, parse failure fallback)
 
 ## Phase 6 — Evaluation & Quality Assurance
-- [ ] Manual eval set of 20 JD/resume pairs run through pipeline
+- [ ] Manual eval set of 15 JD/resume pairs run through pipeline
 - [ ] LLM-as-judge scoring implemented (faithfulness + recommendation accuracy)
 - [ ] Structured output parse success rate measured (target: 100%)
 - [ ] Latency benchmarked (target: < 15s end-to-end)
