@@ -15,9 +15,10 @@
 - [x] Key risks documented (hallucination, cost, latency, data quality)
 
 ## Phase 3 — System Design & Architecture
-- [x] Architecture diagram created (assets/architecture)
+- [x] Architecture diagram created (assets/architecture/agentic-resume-screener-v2.svg)
 - [x] Folder structure initialized and pushed to GitHub
-- [x] Tool stack finalized with written justifications
+- [x] Tool stack finalized with written justifications (Parallel LangGraph + Multi-provider LLM)
+- [x] Parallel fan-out architecture documented in ARCHITECTURE.md
 
 ## Phase 4 — Data & Knowledge Base Preparation
 - [x] Sample JD + resume pairs collected (15 pairs for MVP eval)
@@ -26,11 +27,11 @@
 - [x] Evaluation dataset created (15 JD/resume pairs with human-labeled verdicts)
 
 ## Phase 5 — Prompt Engineering & Chain Design
-- [x] System prompts v1 written for all three LLM agents (extract, analyze, recommend)
-- [ ] Prompt versions tracked (Google Sheets or LangSmith)
-- [x] LangGraph pipeline built end-to-end (smoke tested in 03_pipeline_testing.ipynb)
+- [x] System prompts written for all three LLM agents (extract, analyze, recommend)
+- [x] Prompt versions tracked (in prompts/ folder)
+- [x] LangGraph pipeline built end-to-end with **Parallel Fan-out**
 - [x] Structured Pydantic output schema defined and validated
-- [ ] Guardrails added (off-topic input rejection, parse failure fallback)
+- [x] Deterministic Guardrails added (Deterministic Calibration Mode)
 
 ## Phase 6 — Evaluation & Quality Assurance
 - [ ] Manual eval set of 15 JD/resume pairs run through pipeline

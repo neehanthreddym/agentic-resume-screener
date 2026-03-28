@@ -53,12 +53,19 @@ class JDExtractionResult(BaseModel):
     """
     job_title: str = Field(description="The job title exactly as stated in the JD.")
     company_name: str = Field(description="The name of the hiring company. Return 'Unknown' if not specified.")
-    required_technical_skills: List[str] = Field(description="All technical skills, tools, and technologies explicitly required or strongly preferred.")
+    required_technical_skills: List[str] = Field(description=(
+        "A flat list of specific, atomic, named competencies that are explicitly required or strongly preferred. "
+        "Each item must be a concrete, nameable skill — something a candidate could list on a resume or be tested on. "
+        "RULE: Never include a category, group, or umbrella term — only its specific members. "
+        "For example: if the JD says 'backend languages such as Go, Python, Rust', extract ['Go', 'Python', 'Rust'], NOT 'backend languages'. "
+        "This rule applies universally: 'HR tools' → extract the named tools. 'marketing channels' → extract the named channels. "
+        "Deduplicate: include each distinct skill exactly once."
+    ))
     nice_to_have_skills: List[str] = Field(default_factory=list, description="Skills listed as 'nice to have', 'preferred', or 'bonus'.")
     required_years_of_experience: Optional[int] = Field(default=None, description="The minimum years of professional experience required. Return null if not specified.")
     minimum_education_level: Optional[str] = Field(default=None, description="The minimum degree required (e.g., 'Bachelor', 'Master', 'PhD'). Return null if not explicitly stated.")
     core_responsibilities: List[str] = Field(description="A list of 3-5 primary duties or responsibilities the candidate will be expected to perform.")
-    domain_experience: List[str] = Field(default_factory=list, description="Specific industries or functional domains mentioned (e.g., 'FinTech', 'Healthcare', 'B2B SaaS').")
+    domain_experience: List[str] = Field(default_factory=list, description="Specific industries or functional domains explicitly required as a background for the candidate (e.g., 'FinTech', 'Healthcare'). Extract ONLY from the job requirements section. Ignore company mission statements, 'about us' boilerplate, or DEI sections. If a domain appears as both an acronym and full name (e.g., 'AI' and 'Artificial Intelligence'), use only the full name once.")
     soft_skills: List[str] = Field(default_factory=list, description="Non-technical competencies mentioned (e.g., 'communication', 'leadership', 'agile').")
 
 
@@ -91,6 +98,7 @@ class ScreenerState(BaseModel):
     """The state object passed between nodes in the LangGraph workflow."""
     jd_text: str = ""
     resume_text: str = ""
+    calibration_mode: Literal["lenient", "standard", "strict"] = "standard"
     jd_skills: Optional[JDExtractionResult] = None
     resume_skills: Optional[ResumeExtractionResult] = None
     gap_analysis: Optional[GapAnalysis] = None

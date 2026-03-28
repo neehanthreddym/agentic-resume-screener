@@ -5,22 +5,18 @@ This document details the architectural design and technology stack behind the A
 
 The goal of this system is to evaluate candidate resumes against specific Job Description (JD), extracting structured criteria natively and scoring candidates based on qualifications.
 
-### High-Level Architecture
-![agentic-resume-screener-v1.gif](assets/architecture/agentic-resume-screener-v1.gif)
-
----
+### High-Level Architecture (v2)
+<img src="assets/architecture/agentic-resume-screener-v2.svg" alt="AI Resume Screener Architecture V2" width="75%">
 
 ## 2. Core System Components Flow
-The core logic of the application operates sequentially. Rather than a monolithic LLM call, the workflow is broken down into modular, single-purpose steps to improve accuracy, traceability, and latency control.
+The core logic of the application operates with a **parallel fan-out** topology. By running independent extraction tasks concurrently, we significantly reduce end-to-end latency without sacrificing data quality.
 
 1. **Ingestion Layer:**
    - **Input:** Raw Job Description (PDF/TXT) and Resume (PDF/DOCX).
 2. **The LangGraph StateGraph (Pipeline Layer):**
-   - The State object flows through distinct nodes. Each node performs a specific function and updates the shared State.
-   - **Node 1: Parser:** Given the raw documents, this node utilizes tools (`pdfplumber`, `python-docx`) to extract and clean the raw text strings.
-   - **Node 2: Extractor:** Given the parsed JD, this node extracts key responsibilities, required skills, and nice-to-have skills into a structured JSON payload.
-   - **Node 3: Analyzer:** Given the extracted candidate data and the JD criteria, this node performs a gap analysis, identifying matching skills and missing qualifications.
-   - **Node 4: Recommender:** Based on the analysis, this final node determines the candidate's fit score (e.g., 0-100) and produces a concise hiring recommendation.
+   - **Step 1 (Parallel):** `extract_jd` and `extract_resume` nodes execute simultaneously as `async` functions using native LLM SDK async calls (`client.aio`).
+   - **Step 2 (Fan-In):** `analyze_gaps` waits for both extractions to complete, then perform a semantic comparison.
+   - **Step 3:** `generate_recommendation` applies deterministic score calibration and produces the final verdict for the recruiter.
 3. **Serving Layer:**
    - A **FastAPI** backend exposes the LangGraph pipeline via an `/analyze` endpoint.
 4. **Presentation Layer:**
@@ -41,9 +37,10 @@ For the initial MVP, the LangGraph nodes act as deterministic **LLM Nodes** rath
 - **Latency Control (Target < 15s):** Autonomous agents run the risk of getting stuck in "thought loops" or calling tools repeatedly, spiking latency and cost. By locking the model into a strict sequential flow, I guarantee consistent execution times.
 - **Use Case for Full Agents (Stretch Goal):** If I expand the system to actively search the internet (e.g., "Find this candidate's GitHub to verify Python experience"), checking if enough information has been found would warrant a true Agent loop.
 
-### 3.3 The LLM Layer
-- **Model Choice:** OpenAI's `gpt-4o-mini` (or equivalent models like `Claude 3.5 Haiku`). 
-- **Justification:** Since the task relies heavily on following instructions to produce structured JSON outputs (via Pydantic schemas) quickly, I preferred these highly capable, low-latency, and cost-effective models over heavier reasoning models (like `gpt-4o` or `Claude 3.5 Sonnet`).
+### 3.3 The LLM Layer & Factory Pattern
+- **Multi-Provider Factory:** The system uses a factory pattern (`src/core/llm.py`) to switch between **Groq** (`langchain-groq`) and **Google Gemini** (`google-genai` native SDK) via the `LLM_PROVIDER` environment variable.
+- **Native Async Support:** For Gemini, we implemented a custom `GoogleGenAIChat` adapter that wraps the native SDK's async methods, enabling non-blocking concurrent API calls.
+- **Structured Output:** Every provider is forced to return structured Pydantic models via `.with_structured_output()`, ensuring the StateGraph remains typed and deterministic.
 
 ### 3.4 API & UI Stack
 - **FastAPI:** Chosen for its native asynchronous capabilities, automatic Swagger documentation, and seamless integration with Pydantic for input validation.
@@ -52,6 +49,14 @@ For the initial MVP, the LangGraph nodes act as deterministic **LLM Nodes** rath
 ### 3.5 Data Ingestion & Parsing Strategy
 - **PDF Extraction (PyMuPDF):** Standard parsers (like `pdfplumber`) extract text strictly by Y-coordinates, which destroys the semantic flow of two-column resumes (merging unrelated columns line-by-line). I chose `PyMuPDF` (`fitz`) for its ability to extract text as logical blocks (`page.get_text("blocks")`), preserving the true reading order and column structures necessary for structured LLM comprehension.
 - **DOCX Extraction (python-docx):** I discovered that standard paragraph iteration blind-spots hidden Word tables, which are commonly used for formatting "Skills" sections. Furthermore, extracting tables sequentially *after* paragraphs tacks them onto the bottom of the text, destroying the document's logical hierarchy. The ingestion pipeline is designed to explicitly crawl the underlying document elements to extract paragraphs and tables in their exact visual sequential order.
+
+### 3.7 Deterministic Score Calibration
+To ensure the system isn't a "black box," the final score is calculated in a two-stage process:
+1. **LLM Raw Match (0-100):** The analysis node provides an objective baseline based on skill overlap.
+2. **Python Calibration:** The `generate_recommendation` node applies deterministic Python-side logic based on a `calibration_mode` ("lenient", "standard", "strict").
+   - **Strict Mode:** Applies heavy penalties for missing core languages (-10 per missing skill).
+   - **Lenient Mode:** Provides bonuses for transferable skills (+5 per proxy).
+- **Why?** This allows hiring managers to adjust the "sensitivity" of the screen without changing the underlying prompts.
 
 ---
 

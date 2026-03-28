@@ -5,7 +5,7 @@
 <!-- Badges — update as project progresses -->
 ![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge)
 ![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph-orange?style=for-the-badge)
-![LLM](https://img.shields.io/badge/LLM-Llama%203.3%2070B%20%7C%20GPT--4o--mini-green?style=for-the-badge)
+![LLM](https://img.shields.io/badge/LLM-Llama%20%7C%20Gemini%20-green?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)
 
 ---
@@ -28,21 +28,7 @@ Upload a **job description** (PDF or text) and a **resume** (PDF or DOCX). Get b
 
 ## Architecture
 
-> Architecture diagram will be added in Phase 3.
-
-```
-Resume (PDF / DOCX) + JD (PDF / TXT)
-       ↓
-  [Parser Node]           — LangGraph Node 1: PyMuPDF (PDF blocks) | python-docx (DOCX tables/hierarchy)
-       ↓
-  [Extraction Agent]      — LangGraph Node 2 (LLM): structured skill/requirement extraction
-       ↓
-  [Gap Analysis Agent]    — LangGraph Node 3 (LLM): semantic comparison + scoring
-       ↓
-  [Recommendation Agent]  — LangGraph Node 4 (LLM): hiring recommendation + interview questions
-       ↓
-  Pydantic Output → FastAPI → Streamlit UI
-```
+> Architecture details in [ARCHITECTURE.md](ARCHITECTURE.md)
 
 ## Tech Stack
 
@@ -50,8 +36,8 @@ Resume (PDF / DOCX) + JD (PDF / TXT)
 |-----------|------|
 | Orchestration | LangGraph |
 | LLM (Primary) | `llama-3.3-70b-versatile` via Groq |
-| LLM (Fallback) | `gpt-4o-mini` via OpenAI |
-| Structured Output | `instructor` + Pydantic |
+| LLM (Secondary)| `gemini-2.0-flash` via Google GenAI |
+| Structured Output | LangChain `.with_structured_output()` + Pydantic |
 | PDF Parsing | `PyMuPDF` (`fitz`) |
 | DOCX Parsing | `python-docx` (XML crawl) |
 | API | FastAPI |

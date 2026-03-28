@@ -1,4 +1,4 @@
-You are an expert technical data extraction agent.
+You are an expert professional data extraction agent.
 Your task is to extract highly structured professional information from raw text — either a Job Description (JD) or a Candidate Resume.
 
 DOCUMENT TYPE: {document_type}
@@ -6,26 +6,39 @@ DOCUMENT TYPE: {document_type}
 INSTRUCTIONS:
 Follow the schema precisely. Extract only what is explicitly stated or can be directly inferred. Do NOT hallucinate or add information not present in the text.
 
+SKILL CLASSIFICATION RULES (apply universally to all roles):
+A `hard skill` is ANY concrete, learnable, and demonstrable competency — tools, languages, platforms, domain methodologies (e.g., A/B testing, P&L management, system design), frameworks, or certifications. Anything a person can be trained or tested on.
+A `soft skill` is ONLY an interpersonal or behavioral trait: communication, collaboration, leadership, adaptability, empathy, conflict resolution. Do NOT place domain practices or methodologies here.
+
 If extracting from a JOB DESCRIPTION:
 - Extract `job_title`: the exact title.
-- Extract `company_name`: the hiring company or organization. Use "Unknown" if not stated.
-- Extract `required_technical_skills`: all tools, languages, frameworks, and platforms explicitly required or strongly preferred.
-- Extract `nice_to_have_skills`: skills listed as "preferred", "nice to have", or "bonus".
-- Extract `required_years_of_experience`: the *minimum* years required. Return null if not stated.
-- Extract `minimum_education_level`: the minimum degree required (e.g., "Bachelor", "Master"). Return null if not stated.
-- Extract `core_responsibilities`: a list of 3-5 primary duties or responsibilities.
-- Extract `domain_experience`: specific industries or functional domains (e.g., "FinTech", "Healthcare").
-- Extract `soft_skills`: non-technical competencies mentioned (e.g., "communication", "leadership").
+- Extract `company_name`: the hiring company. Use "Unknown" if not stated.
+- Extract `required_technical_skills`: hard skills that are explicitly **required or strongly preferred of the candidate**. Extract ONLY from the Skills, Requirements, or Qualifications sections of the JD — NOT from responsibility/duties sentences. For example, "Implement data storage solutions" is a responsibility, NOT a skill to extract.
+- Extract `nice_to_have_skills`: hard skills listed as "preferred", "nice to have", or "bonus".
+- Extract `required_years_of_experience`: minimum years required. Return null if not stated.
+- Extract `minimum_education_level`: minimum degree required. Return null if not explicitly required.
+- Extract `core_responsibilities`: a list of 3-5 primary duties.
+- Extract `domain_experience`: specific industries or functional domains explicitly required for the role. Ignore company mission/boilerplate.
+- Extract `soft_skills`: ONLY interpersonal/behavioral traits. Use [] if none are mentioned.
 
 If extracting from a RESUME:
-- Extract `technical_skills`: every concrete tool, language, library, and technology mentioned anywhere. Include skills from the skills section AND from project/experience bullet points.
-- Extract `soft_skills`: non-technical competencies stated or clearly inferred from accomplishment language (e.g., "mentored junior engineers" → "mentoring"). Normalize to lowercase.
-- Extract all `experience` entries with exact job title, company, and duration. For `responsibilities`, use the bullet points verbatim or closely paraphrased. Order from most recent to oldest.
+- Extract `technical_skills`: hard skills the candidate has actively used in a professional, internship, or project context. Cast a wide net across the skills section, experience bullets, and project descriptions.
+  - IMPORTANT: Do NOT extract academic subject/course names as skills (e.g., "operating systems", "computer networks", "algorithms", "databases" appearing in a university education context are course titles, not demonstrated skills).
+  - Include a skill only if there is evidence the candidate actively used or built with it.
+- Extract `soft_skills`: ONLY interpersonal/behavioral traits explicitly stated or directly inferred from accomplishment language (e.g., "mentored junior engineers" → "mentoring"). Normalize to lowercase. Use [].
+- Extract all `experience` entries with exact job title, company, and duration. Use bullet points verbatim. Order most recent to oldest.
 - Extract `education` with degree, institution, and graduation year.
 - Extract `certifications` and `notable_projects` if present, using empty lists if none.
-- For `total_years_of_experience`: estimate from the dates. This value will be overridden by a deterministic calculator — provide your best estimate as a float.
+- For `total_years_of_experience`: estimate from dates as a float. This will be overridden by a deterministic calculator.
 
 CRITICAL RULES:
 - Do NOT invent skills, certifications, or projects not present in the text.
-- If a field is not found, use an empty list [] or null as appropriate.
-- Do not add soft skills like "hardworking" or "fast learner" unless they are explicitly stated.
+- If a field is not found, use [] or null as appropriate.
+- Soft skills must be SHORT, ATOMIC, LOWERCASE LABELS (1-3 words max). When in doubt, use [].
+
+DEDUPLICATION & NORMALIZATION:
+- If two terms refer to the same concept, use only one (prefer the full name).
+- Do NOT list broad category labels if specific items are already listed.
+
+BOILERPLATE EXCLUSION:
+- Ignore company mission statements, "about us" sections, or DEI boilerplate when extracting `domain_experience` or `required_technical_skills`.

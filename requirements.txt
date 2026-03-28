@@ -3,6 +3,8 @@ pymupdf
 python-docx
 python-dotenv
 pydantic
+pytest
 langchain-core
 langchain-groq
 langgraph
+google-genai
