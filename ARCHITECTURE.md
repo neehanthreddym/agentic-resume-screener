@@ -6,7 +6,7 @@ This document details the architectural design and technology stack behind the A
 The goal of this system is to evaluate candidate resumes against specific Job Description (JD), extracting structured criteria natively and scoring candidates based on qualifications.
 
 ### High-Level Architecture (v2)
-<img src="assets/architecture/agentic-resume-screener-v2.svg" alt="AI Resume Screener Architecture V2" width="75%">
+<img src="assets/architecture/agentic-resume-screener-v2.svg" alt="AI Resume Screener Architecture V2" width="100%">
 
 ## 2. Core System Components Flow
 The core logic of the application operates with a **parallel fan-out** topology. By running independent extraction tasks concurrently, we significantly reduce end-to-end latency without sacrificing data quality.
